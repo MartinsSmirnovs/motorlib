@@ -1,9 +1,7 @@
 package net.alex9849.motorlib.sensor;
 
 import java.util.concurrent.TimeUnit;
-
-import com.pi4j.Pi4J;
-import com.pi4j.io.gpio.digital.DigitalInput;
+import net.alex9849.motorlib.pin.Pi4JInputPin;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 public class Flow {
@@ -12,7 +10,7 @@ public class Flow {
     private long pulsesPerSecond = 0;
 
     private final int pulsesPerLiter;
-    private final DigitalInput pin;
+    private final Pi4JInputPin pin;
 
     private long previousMillis = 0;
 
@@ -20,16 +18,11 @@ public class Flow {
      * Flow meter outputs pulses. The resulting count of pulses per time unit
      * divided by the pulses per liter gives us the flow value.
      */
-    public Flow(int pin, int pulsesPerLiter) {
+    public Flow(Pi4JInputPin pin, int pulsesPerLiter) {
         this.pulsesPerLiter = pulsesPerLiter;
 
-        var pi4j = Pi4J.newAutoContext();
-
-        this.pin = pi4j.create(DigitalInput.newConfigBuilder(pi4j)
-                .address(pin)
-                .build());
-
-        this.pin.addListener(e -> {
+        this.pin = pin;
+        this.pin.getHandle().addListener(e -> {
             if (e.state() == DigitalState.HIGH) {
                 pulseCount++;
             }

@@ -20,4 +20,8 @@ public class Pi4JInputPin implements IInputPin {
     public boolean isPull() {
         return input.pull() == PullResistance.PULL_UP;
     }
+
+    public DigitalInput getHandle() {
+        return input;
+    }
 }
