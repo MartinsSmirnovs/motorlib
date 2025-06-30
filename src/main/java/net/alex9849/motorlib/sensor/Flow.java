@@ -29,7 +29,10 @@ public class Flow {
         });
     }
 
-    public synchronized void run(long millis) {
+    /**
+     * Returns true if new value can be read(), false otherwise.
+     */
+    public synchronized boolean run(long millis) {
 
         // If at least a second has passed since the last update.
         if (millis - previousMillis >= TimeUnit.SECONDS.toMillis(1)) {
@@ -38,7 +41,11 @@ public class Flow {
 
             previousPulseCount = pulseCount;
             previousMillis = millis;
+
+            return true;
         }
+
+        return false;
     }
 
     public synchronized double read() {
